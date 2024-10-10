@@ -1,0 +1,14 @@
+# Adapte les modèles par défaut de Django aux modèles personnalisés
+
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserCreationForm
+
+
+User = get_user_model()
+
+
+# Adapte la classe UserCreationForm
+class MemberCreationForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ('username', 'password1', 'password2')
