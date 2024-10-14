@@ -1,0 +1,12 @@
+
+
+<h1>Liste des Critiques</h1>
+    <ul>
+        {% for review in reviews %}
+            <li>
+                <h2>Critique pour : {{ review.post.title }}</h2>
+                <p>{{ review.content }}</p>
+                <p>Publié par {{ review.author.username }} le {{ review.created_at }}</p>
+            </li>
+        {% endfor %}
+    </ul>
