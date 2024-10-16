@@ -1,0 +1,11 @@
+<title>{% if review %}Modifier une Critique{% else %}Ajouter une Critique{% endif %}</title>
+
+<h1>{% if review %}Modifier une Critique{% else %}Ajouter une Critique{% endif %}</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">{% if review %}Modifier{% else %}Ajouter{% endif %}</button>
+</form>
+
+<a href="{% url 'review_detail' review.pk %}">Retour à la liste des Critiques</a>

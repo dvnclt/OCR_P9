@@ -1,0 +1,9 @@
+<title>{% if form.instance.pk %}Modifier un Billet{% else %}Ajouter un Billet{% endif %}</title>
+
+<h1>{% if form.instance.pk %}Modifier un Billet{% else %}Ajouter un Billet{% endif %}</h1>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">{% if form.instance.pk %}Valider les modifications{% else %}Ajouter{% endif %}</button>
+</form>
+<a href="{% url 'post_detail' form.instance.pk %}">Annuler</a>

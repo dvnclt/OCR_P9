@@ -17,6 +17,7 @@ class Review(models.Model):
     post = models.ForeignKey(
         Post, on_delete=models.CASCADE, related_name='reviews'
         )
+    title = models.CharField(max_length=255)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(Member, on_delete=models.CASCADE)

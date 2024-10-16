@@ -1,10 +1,29 @@
+<title>Accueil</title>
 
+<h1>Bienvenue sur la page d'accueil</h1>
 
+{% block content %}
+    <h2>Liste des Posts</h2>
+    {% for post in posts %}
+        <div class="post">
+            <h3><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h3>
+            <p><strong>Contenu:</strong> {{ post.content|truncatewords:30 }}</p>
+            <p><strong>Auteur:</strong> {{ post.author.username }}</p>
+            <p><strong>Posté le :</strong> {{ post.created_at }}</p>
+        </div>
+    {% empty %}
+        <p>Aucun post trouvé.</p>
+    {% endfor %}
 
-<h1>Bienvenue sur LITRevu !</h1>
-<p>Vous êtes maintenant connecté(e).</p>
-
-<form action="{% url 'logout' %}" method="post">
-    {% csrf_token %}
-    <button type="submit">Déconnexion</button>
-</form>
+    <h2>Liste des Critiques</h2>
+    {% for review in reviews %}
+        <div class="review">
+            <h3><a href="{% url 'review_detail' review.pk %}">{{ review.title }}</a></h3>
+            <p><strong>Contenu:</strong> {{ review.content|truncatewords:30 }}</p>
+            <p><strong>Auteur:</strong> {{ review.author.username }}</p>
+            <p><strong>Posté le :</strong> {{ review.created_at }}</p>
+        </div>
+    {% empty %}
+        <p>Aucune critique trouvée.</p>
+    {% endfor %}
+{% endblock %}

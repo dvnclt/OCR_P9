@@ -1,0 +1,17 @@
+<h1>{{ post.title }}</h1>
+<p>{{ post.content }}</p>
+<p>Posté par {{ post.author }} le {{ post.created_at }}</p>
+
+<h2>Critiques</h2>
+<ul>
+    {% for review in reviews %}
+        <li>
+            <strong>{{ review.author }}:</strong> {{ review.content }} (le {{ review.created_at }})
+        </li>
+    {% empty %}
+        <li>Aucune critique pour ce post.</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'post_update' post.pk %}">Modifier le post</a>
+<a href="{% url 'post_delete' post.pk %}">Supprimer le post</a>
