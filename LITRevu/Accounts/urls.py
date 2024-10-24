@@ -3,7 +3,8 @@ from django.contrib.auth.views import LogoutView, LoginView
 from .config import MemberCreationForm
 from django.views.generic import CreateView
 
-from .views import home, follow_list
+from .views import follow_list
+
 
 urlpatterns = [
     path('login/', LoginView.as_view(template_name='login.html'),
@@ -14,6 +15,5 @@ urlpatterns = [
                                        form_class=MemberCreationForm,
                                        success_url='/login/'), name='signup'),
 
-    path('home/', home, name='home'),
     path('follows/', follow_list, name='follow-list')
 ]

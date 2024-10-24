@@ -1,9 +1,18 @@
-<title>{% if form.instance.pk %}Modifier un Billet{% else %}Ajouter un Billet{% endif %}</title>
+<title>Créer un Billet</title>
 
-<h1>{% if form.instance.pk %}Modifier un Billet{% else %}Ajouter un Billet{% endif %}</h1>
-<form method="POST">
+{% block content %}
+  <h2>Créer un Billet</h2>
+  <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">{% if form.instance.pk %}Valider les modifications{% else %}Ajouter{% endif %}</button>
-</form>
-<a href="{% url 'post_detail' form.instance.pk %}">Annuler</a>
+    <button type="submit">Envoyer</button>
+    <a href="{% url 'feed' %}">Annuler</a>
+  </form>
+
+  {% if form.non_field_errors %}
+  <!-- TODO : Qu'est ce que c'est ? -->
+    <div class="alert alert-danger">
+      {{ form.non_field_errors }}
+    </div>
+  {% endif %}
+{% endblock %}

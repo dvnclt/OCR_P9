@@ -6,6 +6,7 @@ from Accounts.models import Member
 class Post(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField()
+    image = models.ImageField(upload_to='post_images/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(Member, on_delete=models.CASCADE)
 

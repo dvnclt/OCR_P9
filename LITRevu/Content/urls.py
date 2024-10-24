@@ -1,12 +1,12 @@
 from django.urls import path
 
 from .views import (
-    PostDetailView, PostCreateView, PostUpdateView, PostDeleteView,
-    ReviewDetailView, ReviewCreateView, ReviewUpdateView, ReviewDeleteView
+    PostCreateView, PostUpdateView, PostDeleteView,
+    ReviewCreateView, ReviewUpdateView, ReviewDeleteView,
+    PostReviewCreateView, FeedView
     )
 
 urlpatterns = [
-    path('posts/<int:pk>/', PostDetailView.as_view(), name='post_detail'),
     path('posts/new/', PostCreateView.as_view(), name='post_create'),
     path('posts/<int:pk>/update/', PostUpdateView.as_view(),
          name='post_update'),
@@ -14,11 +14,13 @@ urlpatterns = [
          name='post_delete'),
 
 
-    path('reviews/<int:pk>/', ReviewDetailView.as_view(),
-         name='review_detail'),
     path('reviews/new/', ReviewCreateView.as_view(), name='review_create'),
     path('reviews/<int:pk>/update/', ReviewUpdateView.as_view(),
          name='review_update'),
     path('reviews/<int:pk>/delete/', ReviewDeleteView.as_view(),
          name='review_delete'),
+
+    path('post-review/new/', PostReviewCreateView.as_view(),
+         name='post-review_create'),
+    path('feed/', FeedView.as_view(), name='feed')
 ]

@@ -1,0 +1,10 @@
+<h2>Confirmer la suppression</h2>
+<p>
+    Voulez-vous vraiment supprimer 
+    {% if item_type == 'post' %} ce billet {% elif item_type == 'review' %} cette critique {% endif %} ?
+</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Confirmer</button>
+    <button type="button" onclick="window.history.back()">Annuler</button>
+</form>

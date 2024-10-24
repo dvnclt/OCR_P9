@@ -1,11 +1,11 @@
-<title>{% if review %}Modifier une Critique{% else %}Ajouter une Critique{% endif %}</title>
+<title>Créer une Critique</title>
 
-<h1>{% if review %}Modifier une Critique{% else %}Ajouter une Critique{% endif %}</h1>
+<h1>Créer une Critique</h1>
 
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">{% if review %}Modifier{% else %}Ajouter{% endif %}</button>
+    <button type="submit">Envoyer</button>
 </form>
 
-<a href="{% url 'review_detail' review.pk %}">Retour à la liste des Critiques</a>
+<a href="{% url 'feed' %}">Annuler</a>
