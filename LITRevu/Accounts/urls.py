@@ -1,9 +1,9 @@
 from django.urls import path
-from django.contrib.auth.views import LogoutView, LoginView
+from django.contrib.auth.views import LoginView, LogoutView
 from .config import MemberCreationForm
 from django.views.generic import CreateView
 
-from .views import follow_list
+from .views import SubscriptionView
 
 
 urlpatterns = [
@@ -15,5 +15,8 @@ urlpatterns = [
                                        form_class=MemberCreationForm,
                                        success_url='/login/'), name='signup'),
 
-    path('follows/', follow_list, name='follow-list')
+    path('subscription/', SubscriptionView.as_view(), name='subscription'),
+    path('follow/<int:member_id>/', SubscriptionView.as_view(),
+         name='follow-member'
+         ),
 ]

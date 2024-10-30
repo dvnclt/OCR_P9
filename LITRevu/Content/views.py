@@ -1,7 +1,10 @@
 from django.views.generic import CreateView, UpdateView, DeleteView, View
 from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
+from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.http import HttpResponseRedirect
+
 
 from itertools import chain
 
@@ -63,7 +66,7 @@ class PostDeleteView(UserPassesTestMixin, DeleteView):
 class ReviewCreateView(CreateView):
     model = Review
     template_name = 'review_form.html'
-    fields = ['title', 'content']
+    fields = ['title', 'content', 'rating']
     success_url = reverse_lazy('feed')
 
     # Assigne l'utilisateur comme auteur de la review
@@ -73,6 +76,18 @@ class ReviewCreateView(CreateView):
         # Récupérer le post_id à partir de la requête GET
         post_id = self.request.GET.get('post_id')
         if post_id:
+            post = Post.objects.get(id=post_id)
+
+            # Vérifie si l'utilisateur a déjà publié une critique pour ce post
+            if Review.objects.filter(
+                    post=post, author=self.request.user
+                    ).exists():
+                messages.error(
+                    self.request, "Erreur: Vous avez déjà publié une critique "
+                    "pour ce post."
+                    )
+                return HttpResponseRedirect(reverse('feed'))
+
             # Associer la critique au post
             form.instance.post = Post.objects.get(id=post_id)
 
@@ -136,6 +151,7 @@ class PostReviewCreateView(View):
                 post=post,
                 title=form.cleaned_data['review_title'],
                 content=form.cleaned_data['review_content'],
+                rating=form.cleaned_data['review_rating'],
                 author=request.user
             )
             review.save()

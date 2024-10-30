@@ -16,3 +16,9 @@ class PostReviewForm(forms.Form):
     review_content = forms.CharField(
         widget=forms.Textarea(attrs={'placeholder': 'Contenu de la critique'})
     )
+    review_rating = forms.IntegerField(
+        min_value=1,
+        max_value=5,
+        widget=forms.Select(choices=[(i, i) for i in range(1, 6)]),
+        label="Note"
+    )

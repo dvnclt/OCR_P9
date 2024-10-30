@@ -1,3 +1,7 @@
+{% extends 'base.html' %}
+{% block title %}Créer une critique{% endblock %}
+
+{% block content %}
 <form method="post">
     {% csrf_token %}
     <h2>Créer un Post et une Critique</h2>
@@ -6,7 +10,9 @@
     {{ form.post_content.label }}: {{ form.post_content }}<br>
     <h3>Critique</h3>
     {{ form.review_title.label }}: {{ form.review_title }}<br>
+    {{ form.review_rating.label }}: {{ form.review_rating }}<br>
     {{ form.review_content.label }}: {{ form.review_content }}<br>
 
     <button type="submit">Créer Post et Critique</button>
 </form>
+{% endblock %}

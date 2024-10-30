@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 from Accounts.models import Member
 
@@ -19,6 +20,9 @@ class Review(models.Model):
         Post, on_delete=models.CASCADE, related_name='reviews'
         )
     title = models.CharField(max_length=255)
+    rating = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)]
+    )
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(Member, on_delete=models.CASCADE)

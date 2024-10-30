@@ -1,11 +1,15 @@
-<title>Créer une Critique</title>
+{% extends 'base.html' %}
+{% block title %}Ajouter une critique{% endblock %}
 
-<h1>Créer une Critique</h1>
+{% block content %}
+<h1>Ajouter une Critique</h1>
 
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
+    {{ review.rating }}
     <button type="submit">Envoyer</button>
 </form>
 
 <a href="{% url 'feed' %}">Annuler</a>
+{% endblock %}

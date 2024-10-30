@@ -9,14 +9,14 @@ class Member(AbstractUser):
                 f"{self.first_name} - {self.last_name}")
 
 
-class Follow(models.Model):
+class Subscription(models.Model):
+    following = models.ForeignKey(
+        Member, on_delete=models.CASCADE, related_name='followers'
+    )
     follower = models.ForeignKey(
         Member, on_delete=models.CASCADE, related_name='following'
-        )
-    followed = models.ForeignKey(
-        Member, on_delete=models.CASCADE, related_name='followers'
-        )
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.follower} follows {self.followed}"
+        return f"{self.follower} suit {self.following}"

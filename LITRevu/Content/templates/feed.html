@@ -1,13 +1,14 @@
-<title>Flux</title>
+{% extends 'base.html' %}
+{% block title %}Flux{% endblock %}
 
-
+{% block content %}
 <!-- Bouton pour ajouter un post -->
 <a href="{% url 'post_create' %}" class="post_btn">Demander une critique</a>
 
 <!-- Bouton pour créer une critique -->
 <a href="{% url 'post-review_create' %}" class="post_review_btn">Créer une critique</a>
 
-<h2>Liste des Posts</h2>
+<h2>Activité récente</h2>
 {% for item in sorted_items %}
     <div class="item">
         {% if item.type == 'post' %}
@@ -25,26 +26,23 @@
             {% if item.item.image %}
                 <img src="{{ item.item.image.url }}" alt="{{ item.item.title }}">
             {% endif %}
-            <p>Posté le : {{ item.item.created_at|date:"d/m/Y H:i" }}</p>
+            <p>{{ item.item.created_at|date:"H:i, d F Y" }}</p>
 
         {% elif item.type == 'review' %}
             <!-- Affichage d'une critique -->
             {% if item.item.author == user %}
-            <p>Vous avez publié une critique</p>
+                <p>Vous avez publié une critique</p>
             {% else %}
                 <p>{{ item.item.author.username }} a publié une critique</p>
             {% endif %}
             <h3>{{ item.item.title }}</h3>
             <p>Critique de : {{ item.item.post.title }}</p>
+            <p>Note : {{ item.item.rating }} / 5</p>
             <p>Contenu: {{ item.item.content|truncatewords:30 }}</p>
-            <p>Posté le : {{ item.item.created_at|date:"d/m/Y H:i" }}</p>
+            <p>{{ item.item.created_at|date:"H:i, d F Y" }}</p>
         {% endif %}
     </div>
 {% empty %}
     <p>Aucun post ou critique trouvé.</p>
 {% endfor %}
-
-<form action="{% url 'logout' %}" method="post">
-    {% csrf_token %}
-    <button type="submit" class="logout-btn">Déconnexion</button>
-</form>
+{% endblock %}
