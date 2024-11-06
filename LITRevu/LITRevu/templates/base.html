@@ -10,10 +10,11 @@
 <body>
     <header>
         <h1>LITRevu</h1>
+        <p>{{ user.username }}</p>
         <nav>
             <ul>
                 <li><a href="{% url 'feed' %}">Flux</a></li>
-                <li>Mes publications</li>
+                <li><a href="{% url 'my_posts' %}">Mes publications</a></li>
                 <li><a href="{% url 'subscription' %}">Abonnements</a></li>
                 <li>
                     <form action="{% url 'logout' %}" method="post">

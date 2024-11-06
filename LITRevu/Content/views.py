@@ -1,15 +1,15 @@
 from django.views.generic import CreateView, UpdateView, DeleteView, View
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.http import HttpResponseRedirect
-
-
-from itertools import chain
+from django.db.models import Q
 
 from .models import Post, Review
 from .forms import PostReviewForm
+
+from Accounts.models import Subscription
 
 
 # Vue pour la création d'un post
@@ -30,7 +30,7 @@ class PostUpdateView(UserPassesTestMixin, UpdateView):
     model = Post
     template_name = 'post_form.html'
     fields = ['title', 'content']
-    success_url = reverse_lazy('feed')
+    success_url = reverse_lazy('my_posts')
 
     # Restreint l'accès au créateur du post
     def test_func(self):
@@ -46,7 +46,7 @@ class PostUpdateView(UserPassesTestMixin, UpdateView):
 class PostDeleteView(UserPassesTestMixin, DeleteView):
     model = Post
     template_name = 'delete_confirm.html'
-    success_url = reverse_lazy('feed')
+    success_url = reverse_lazy('my_posts')
 
     # Restreint l'accès au créateur du post
     def test_func(self):
@@ -66,7 +66,7 @@ class PostDeleteView(UserPassesTestMixin, DeleteView):
 class ReviewCreateView(CreateView):
     model = Review
     template_name = 'review_form.html'
-    fields = ['title', 'content', 'rating']
+    fields = ['title', 'rating', 'content']
     success_url = reverse_lazy('feed')
 
     # Assigne l'utilisateur comme auteur de la review
@@ -76,30 +76,49 @@ class ReviewCreateView(CreateView):
         # Récupérer le post_id à partir de la requête GET
         post_id = self.request.GET.get('post_id')
         if post_id:
-            post = Post.objects.get(id=post_id)
+            post = get_object_or_404(Post, id=post_id)
 
             # Vérifie si l'utilisateur a déjà publié une critique pour ce post
-            if Review.objects.filter(
-                    post=post, author=self.request.user
-                    ).exists():
+            if Review.objects.filter(post=post).exists():
                 messages.error(
-                    self.request, "Erreur: Vous avez déjà publié une critique "
-                    "pour ce post."
-                    )
+                    self.request, "Erreur: Une critique existe déjà "
+                                  "pour ce post."
+                )
                 return HttpResponseRedirect(reverse('feed'))
 
-            # Associer la critique au post
-            form.instance.post = Post.objects.get(id=post_id)
+            # Associe la critique au post
+            form.instance.post = post
 
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Récupère le post à partir de l'ID passé dans la requête
+        post_id = self.request.GET.get('post_id')
+        if post_id:
+            post = get_object_or_404(Post, id=post_id)
+            context['post'] = post  # Passe le post au template
+
+        return context
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+
+        # Modifie les labels des champs
+        form.fields['title'].label = 'Titre'
+        form.fields['rating'].label = 'Note'
+        form.fields['content'].label = 'Commentaire'
+
+        return form
 
 
 # Vue pour la modification d'une review
 class ReviewUpdateView(UserPassesTestMixin, UpdateView):
     model = Review
     template_name = 'review_form.html'
-    fields = ['post', 'title', 'content']
-    success_url = reverse_lazy('feed')
+    fields = ['title', 'rating', 'content']
+    success_url = reverse_lazy('my_posts')
 
     # Restreint l'accès au créateur de la review
     def test_func(self):
@@ -113,7 +132,7 @@ class ReviewUpdateView(UserPassesTestMixin, UpdateView):
 class ReviewDeleteView(UserPassesTestMixin, DeleteView):
     model = Review
     template_name = 'delete_confirm.html'
-    success_url = reverse_lazy('feed')
+    success_url = reverse_lazy('my_posts')
 
     # Restreint l'accès au créateur de la review
     def test_func(self):
@@ -166,34 +185,96 @@ class FeedView(View):
     template_name = 'feed.html'
 
     def get(self, request, *args, **kwargs):
-        posts = Post.objects.all()
-        reviews = Review.objects.all()
 
-        sorted_items = sorted(
-            chain(posts, reviews),
-            key=lambda instance: instance.created_at,
-            reverse=True
-        )
+        # Récupère la liste des utilisateurs suivis
+        followed_users = Subscription.objects.filter(
+            follower=request.user).values_list('following', flat=True)
 
-        # Ajouter un type à chaque élément
-        sorted_items_with_type = []
-        for item in sorted_items:
-            item_type = 'post' if isinstance(item, Post) else 'review'
-            has_reviewed = None
+        # Récupére les posts et les critiques
+        # des utilisateurs suivis et de l'utilisateur donné
+        posts = Post.objects.filter(
+            Q(author__id__in=followed_users) |
+            Q(author=request.user)
+            ).order_by('-created_at')
+        reviews = Review.objects.filter(
+            Q(author__id__in=followed_users) |
+            Q(author=request.user)
+            ).order_by('-created_at')
 
-            if item_type == 'post':
-                has_reviewed = item.reviews.filter(
-                    author=request.user
-                    ).exists()
+        # Ajout des attributs pour éviter 'item.item' dans le template
+        items = []
+        for post in posts:
 
-            sorted_items_with_type.append({
-                'item': item,
-                'type': item_type,
-                'has_reviewed': has_reviewed,
+            # Vérifie si l'utilisateur a déjà ajouté une critique pour ce post
+            has_reviewed = Review.objects.filter(post=post).exists()
+
+            items.append({
+                'type': 'post',
+                'author': post.author,
+                'title': post.title,
+                'content': post.content,
+                'created_at': post.created_at,
+                'image': post.image,
+                'id': post.id,
+                'has_reviewed': has_reviewed
+            })
+        for review in reviews:
+            items.append({
+                'type': 'review',
+                'author': review.author,
+                'title': review.title,
+                'content': review.content,
+                'created_at': review.created_at,
+                'rating': review.rating,
+                'post': review.post,
+                'id': review.id
             })
 
-        context = {
-            'sorted_items': sorted_items_with_type
-        }
+        # Trie les éléments par date de création
+        sorted_items = sorted(
+            items, key=lambda x: x['created_at'], reverse=True)
 
-        return render(request, self.template_name, context)
+        return render(request, 'feed.html', {'sorted_items': sorted_items})
+
+
+# TODO : Seulement si connecté
+class MyPostsView(View):
+    template_name = 'my_posts.html'
+
+    def get(self, request, *args, **kwargs):
+        # Récupère l'utilisateur à partir de l'URL ou de la requête
+        user = request.user
+
+        # Récupère tous les posts et critiques publiés par cet utilisateur
+        posts = Post.objects.filter(author=user).order_by('-created_at')
+        reviews = Review.objects.filter(author=user).order_by('-created_at')
+
+        # Ajout des attributs pour éviter 'item.item' dans le template
+        items = []
+        for post in posts:
+            items.append({
+                'type': 'post',
+                'author': post.author,
+                'title': post.title,
+                'content': post.content,
+                'created_at': post.created_at,
+                'image': post.image,
+                'id': post.id,
+            })
+        for review in reviews:
+            items.append({
+                'type': 'review',
+                'author': review.author,
+                'title': review.title,
+                'content': review.content,
+                'created_at': review.created_at,
+                'rating': review.rating,
+                'post': review.post,
+                'id': review.id
+            })
+
+        # Trie les éléments par date de création
+        sorted_items = sorted(
+            items, key=lambda x: x['created_at'], reverse=True)
+
+        return render(request, 'my_posts.html', {'sorted_items': sorted_items})

@@ -3,7 +3,7 @@ from django.urls import path
 from .views import (
     PostCreateView, PostUpdateView, PostDeleteView,
     ReviewCreateView, ReviewUpdateView, ReviewDeleteView,
-    PostReviewCreateView, FeedView
+    PostReviewCreateView, FeedView, MyPostsView
     )
 
 urlpatterns = [
@@ -22,5 +22,6 @@ urlpatterns = [
 
     path('post-review/new/', PostReviewCreateView.as_view(),
          name='post-review_create'),
-    path('feed/', FeedView.as_view(), name='feed')
+    path('feed/', FeedView.as_view(), name='feed'),
+    path('myposts/', MyPostsView.as_view(), name='my_posts'),
 ]

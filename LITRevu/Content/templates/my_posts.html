@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Vos posts</h1>
+
+{% for item in sorted_items %}
+    <div class="item">
+        {% if item.type == 'post' %}
+        <!-- Affichage d'un post -->
+            <p>Vous avez publié un ticket</p>
+            <p>{{ item.created_at|date:"H:i, d F Y" }}</p>
+            <p>{{ item.title }}</p>
+            <p>{{ item.content }}</p>
+            {% if item.image %}
+                <img src="{{ item.image.url }}" alt="{{ item.title }}">
+            {% endif %}
+            <a href="{% url 'post_update' pk=item.id %}" class="btn btn-primary">Modifier</a>
+            <a href="{% url 'post_delete' pk=item.id %}" class="btn btn-danger">Supprimer</a>
+
+        {% elif item.type == 'review' %}
+            <!-- Affichage d'une critique -->
+            <p>Vous avez publié une critique</p>
+            <p>{{ item.created_at|date:"H:i, d F Y" }}</p>
+            <p>{{ item.title }} - {{ item.rating }} / 5</p>
+            <p>{{ item.content }}</p>
+            <p>Ticket - {{ item.post.author.username }}</p>
+            <p>{{ item.post.title }}</p>
+            {% if item.post.image %}
+                <img src="{{ item.post.image.url }}" alt="{{ item.post.title }}">
+            {% endif %}
+            <a href="{% url 'review_update' pk=item.id %}" class="btn btn-primary">Modifier</a>
+            <a href="{% url 'review_delete' pk=item.id %}" class="btn btn-danger">Supprimer</a>
+        {% endif %}
+    </div>
+{% empty %}
+  <p>Aucun post ou critique trouvé.</p>
+{% endfor %}
+{% endblock %}

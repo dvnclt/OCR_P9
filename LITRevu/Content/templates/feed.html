@@ -13,33 +13,36 @@
     <div class="item">
         {% if item.type == 'post' %}
             <!-- Affichage d'un post -->
-            {% if item.item.author == user %}
+            {% if item.author == user %}
                 <p>Vous avez demandé une critique</p>
             {% else %}
-                <p>{{ item.item.author.username }} a demandé une critique</p>
+                <p>{{ item.author.username }} a demandé une critique</p>
             {% endif %}
-            <h3>{{ item.item.title }}</h3>
-            <p>Contenu: {{ item.item.content }}</p>
-            {% if not entry.has_reviewed %}
-                <a href="{% url 'review_create' %}?post_id={{ item.item.id }}" class="add_review_btn">Ajouter une critique</a>
+            <h3>{{ item.title }}</h3>
+            <p>Contenu: {{ item.content }}</p>
+            {% if not item.has_reviewed %}
+                <a href="{% url 'review_create' %}?post_id={{ item.id }}" class="add_review_btn">Ajouter une critique</a>
             {% endif %}
-            {% if item.item.image %}
-                <img src="{{ item.item.image.url }}" alt="{{ item.item.title }}">
+            {% if item.image %}
+                <img src="{{ item.image.url }}" alt="{{ item.title }}">
             {% endif %}
-            <p>{{ item.item.created_at|date:"H:i, d F Y" }}</p>
+            <p>{{ item.created_at|date:"H:i, d F Y" }}</p>
 
         {% elif item.type == 'review' %}
             <!-- Affichage d'une critique -->
-            {% if item.item.author == user %}
+            {% if item.author == user %}
                 <p>Vous avez publié une critique</p>
             {% else %}
-                <p>{{ item.item.author.username }} a publié une critique</p>
+                <p>{{ item.author.username }} a publié une critique</p>
             {% endif %}
-            <h3>{{ item.item.title }}</h3>
-            <p>Critique de : {{ item.item.post.title }}</p>
-            <p>Note : {{ item.item.rating }} / 5</p>
-            <p>Contenu: {{ item.item.content|truncatewords:30 }}</p>
-            <p>{{ item.item.created_at|date:"H:i, d F Y" }}</p>
+            <p>{{ item.created_at|date:"H:i, d F Y" }}</p>
+            <p>{{ item.title }} - {{ item.rating }} / 5</p>
+            <p>{{ item.content|truncatewords:30 }}</p>
+            <p>Ticket - {{ item.post.author.username }}</p>
+            <p>{{ item.post.title }}</p>
+            {% if item.post.image %}
+                <img src="{{ item.post.image.url }}" alt="{{ item.post.title }}">
+            {% endif %}
         {% endif %}
     </div>
 {% empty %}

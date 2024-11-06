@@ -10,9 +10,11 @@ class Member(AbstractUser):
 
 
 class Subscription(models.Model):
+    # Représente un abonnement
     following = models.ForeignKey(
         Member, on_delete=models.CASCADE, related_name='followers'
     )
+    # Représente un abonné
     follower = models.ForeignKey(
         Member, on_delete=models.CASCADE, related_name='following'
     )

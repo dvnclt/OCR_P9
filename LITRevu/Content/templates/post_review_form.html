@@ -2,17 +2,18 @@
 {% block title %}Créer une critique{% endblock %}
 
 {% block content %}
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <h2>Créer un Post et une Critique</h2>
+    <h1>Livre / Article</h1>
 
     {{ form.post_title.label }}: {{ form.post_title }}<br>
     {{ form.post_content.label }}: {{ form.post_content }}<br>
-    <h3>Critique</h3>
+    {{ form.post_image.label }}: {{ form.post_image }}<br>
+    <h1>Critique</h1>
     {{ form.review_title.label }}: {{ form.review_title }}<br>
     {{ form.review_rating.label }}: {{ form.review_rating }}<br>
     {{ form.review_content.label }}: {{ form.review_content }}<br>
 
-    <button type="submit">Créer Post et Critique</button>
+    <button type="submit">Envoyer</button>
 </form>
 {% endblock %}
