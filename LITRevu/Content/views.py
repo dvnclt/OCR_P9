@@ -29,7 +29,7 @@ class PostCreateView(CreateView):
 class PostUpdateView(UserPassesTestMixin, UpdateView):
     model = Post
     template_name = 'post_form.html'
-    fields = ['title', 'content']
+    fields = ['title', 'content', 'image']
     success_url = reverse_lazy('my_posts')
 
     # Restreint l'accès au créateur du post
@@ -120,12 +120,13 @@ class ReviewUpdateView(UserPassesTestMixin, UpdateView):
     fields = ['title', 'rating', 'content']
     success_url = reverse_lazy('my_posts')
 
-    # Restreint l'accès au créateur de la review
     def test_func(self):
         return self.request.user == self.get_object().author
 
-    def get_queryset(self):
-        return Review.objects.filter(author=self.request.user)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['post'] = self.object.post
+        return context
 
 
 # Vue pour la suppression d'une review
@@ -190,7 +191,7 @@ class FeedView(View):
         followed_users = Subscription.objects.filter(
             follower=request.user).values_list('following', flat=True)
 
-        # Récupére les posts et les critiques
+        # Récupère les posts et les critiques
         # des utilisateurs suivis et de l'utilisateur donné
         posts = Post.objects.filter(
             Q(author__id__in=followed_users) |
@@ -201,11 +202,16 @@ class FeedView(View):
             Q(author=request.user)
             ).order_by('-created_at')
 
+        # Récupère également les reviews en rapport avec les posts du user
+        my_post_reviews = Review.objects.filter(
+            post__author=request.user
+            ).order_by('-created_at')
+
         # Ajout des attributs pour éviter 'item.item' dans le template
         items = []
         for post in posts:
 
-            # Vérifie si l'utilisateur a déjà ajouté une critique pour ce post
+            # Vérifie si une review a déjà été ajoutée pour le post donné
             has_reviewed = Review.objects.filter(post=post).exists()
 
             items.append({
@@ -218,7 +224,7 @@ class FeedView(View):
                 'id': post.id,
                 'has_reviewed': has_reviewed
             })
-        for review in reviews:
+        for review in list(reviews) + list(my_post_reviews):
             items.append({
                 'type': 'review',
                 'author': review.author,
@@ -237,7 +243,6 @@ class FeedView(View):
         return render(request, 'feed.html', {'sorted_items': sorted_items})
 
 
-# TODO : Seulement si connecté
 class MyPostsView(View):
     template_name = 'my_posts.html'
 

@@ -2,59 +2,67 @@
 {% block title %}Abonnements{% endblock %}
 
 {% block content %}
+    {% block follow %}
+    <h1>Suivre d'autres utilisateurs :</h1>
+    <!-- Formulaire pour rechercher un utilisateur en utilisant la méthode GET -->
+    <form action="{% url 'subscription' %}" method="get"> 
+        <!-- Champ de texte pour entrer un nom d'utilisateur, avec la valeur 'query' passée depuis la vue (ou vide si aucun terme de recherche) -->
+        <input type="text" name="q" placeholder="Rechercher un utilisateur" value="{{ query|default:'' }}">
+        <button type="submit">Rechercher</button>
+    </form>
+    {% if members %}
+        <ul>
+            {% for member in members %}
+                <li>
+                    {{ member.username }}
+                    {% if member.id in following_ids %}
+                        <span>est déjà suivi(e)</span>
+                    {% else %}
+                        <form action="{% url 'subscription' %}" method="post" style="display:inline;">
+                        <!-- style="display:inline;" sert à afficher les éléments les uns à côté des autres (pas les uns au dessus des autres)-->
+                            {% csrf_token %}
+                            <input type="hidden" name="member_id" value="{{ member.id }}">
+                            <input type="hidden" name="follow" value="1">
+                            <button type="submit">Suivre</button>
+                        </form>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        {% if query %}
+            <p>Aucun utilisateur trouvé.</p>
+        {% endif %}
+    {% endif %}
+    {% endblock %}
 
-<h1>Suivre d'autres utilisateurs :</h1>
-<form action="{% url 'subscription' %}" method="get">
-    <input type="text" name="q" placeholder="Rechercher un utilisateur" value="{{ query|default:'' }}">
-    <button type="submit">Rechercher</button>
-</form>
-{% if members %}
+    {% block following %}
+    <h1>Abonnements :</h1>
     <ul>
-        {% for member in members %}
+        {% for follow in following %}
             <li>
-                {{ member.username }}
-                {% if member.id in following_ids %}
-                    <span>est déjà suivi(e)</span>
-                {% else %}
-                    <form action="{% url 'subscription' %}" method="post" style="display:inline;">
-                        {% csrf_token %}
-                        <input type="hidden" name="member_id" value="{{ member.id }}">
-                        <input type="hidden" name="follow" value="1">
-                        <button type="submit">Suivre</button>
-                    </form>
-                {% endif %}
+                {{ follow.following.username }}
+                <form action="{% url 'subscription' %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="member_id" value="{{ follow.following.id }}">
+                    <input type="hidden" name="unfollow" value="1">
+                    <button type="submit">Se désabonner</button>
+                </form>
             </li>
+        {% empty %}
+            <li>Vous ne suivez personne.</li>
         {% endfor %}
     </ul>
-{% else %}
-    {% if query %}
-        <p>Aucun utilisateur trouvé.</p>
-    {% endif %}
-{% endif %}
+    {% endblock %}
 
-<h1>Abonnements :</h1>
-<ul>
-    {% for follow in following %}
-        <li>
-            {{ follow.following.username }}
-            <form action="{% url 'subscription' %}" method="post" style="display:inline;">
-                {% csrf_token %}
-                <input type="hidden" name="member_id" value="{{ follow.following.id }}">
-                <input type="hidden" name="unfollow" value="1">
-                <button type="submit">Se désabonner</button>
-            </form>
-        </li>
-    {% empty %}
-        <li>Vous ne suivez personne.</li>
-    {% endfor %}
-</ul>
-
-<h1>Abonnés :</h1>
-<ul>
-    {% for follower in followers %}
-        <li>{{ follower.follower.username }}</li>
-    {% empty %}
-        <li>Personne ne vous suit.</li>
-    {% endfor %}
-</ul>
+    {% block followers %}
+    <h1>Abonnés :</h1>
+    <ul>
+        {% for follower in followers %}
+            <li>{{ follower.follower.username }}</li>
+        {% empty %}
+            <li>Personne ne vous suit.</li>
+        {% endfor %}
+    </ul>
+    {% endblock %}
 {% endblock %}

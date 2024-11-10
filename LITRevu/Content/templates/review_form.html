@@ -1,25 +1,22 @@
 {% extends 'base.html' %}
-{% block title %}Ajouter une critique{% endblock %}
+{% block title %}Modifier la critique{% endblock %}
 
 {% block content %}
-<h1>Ajouter une critique</h1>
+<h1>Modifier la critique</h1>
 
-<h2>Vous êtes en train de poster en réponse à</h2>
-<p>{{ post.author.username }} a demandé une critique</p>
-<p>{{ post.created_at|date:"H:i, d F Y" }}</p>
+<h2>Critique du post :</h2>
+<p>{{ post.author.username }} a demandé une critique:</p>
 <p>{{ post.title }}</p>
 <p>{{ post.content }}</p>
 {% if post.image %}
-    <img src="{{ post.image.url }}" alt="{{ post.title }}">
+    <img src="{{ post.image.url }}" alt="{{ post.title }}" class="img-fluid">
 {% endif %}
 
-<h2>Critique</h2>
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
-    {{ review.rating }}
-    <button type="submit">Envoyer</button>
+    <button type="submit" class="btn btn-primary">Envoyer</button>
+    <a href="{% url 'my_posts' %}" class="btn btn-secondary">Annuler</a>
 </form>
 
-<a href="{% url 'feed' %}">Annuler</a>
 {% endblock %}

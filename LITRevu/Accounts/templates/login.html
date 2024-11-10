@@ -1,9 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Connexion{% endblock %}
 
+{% block header %}
+<!-- Cache le header de base.html -->
+{% endblock %}
 
-<h2>Connexion</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
+{% block content %}
+<h1>Connexion</h1>
+<form method="post"> <!-- Début du formulaire avec la méthode POST pour envoyer les données de connexion -->
+    {% csrf_token %} <!-- Jeton CSRF pour sécuriser le formulaire contre les attaques cross-site -->
+    {{ form.as_p }} <!-- Affiche le formulaire avec chaque champ dans un paragraphe <p> -->
     <button type="submit">Se connecter</button>
 </form>
 <p>Pas de compte ? <a href="{% url 'signup' %}">Inscrivez-vous ici</a></p>
+{% endblock content %}

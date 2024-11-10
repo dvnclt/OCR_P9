@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
+    {% block header %}
     <header>
         <h1>LITRevu</h1>
         <p>{{ user.username }}</p>
@@ -18,13 +19,14 @@
                 <li><a href="{% url 'subscription' %}">Abonnements</a></li>
                 <li>
                     <form action="{% url 'logout' %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="logout-btn">Se déconnecter</button>
+                        {% csrf_token %}
+                        <button type="submit" class="logout-btn">Se déconnecter</button>
                     </form>
                 </li>
             </ul>
         </nav>
     </header>
+    {% endblock %}
 
     <main>
         {% if messages %}
@@ -42,6 +44,7 @@
     </main>
 
     <footer>
+        <!-- Pied de page -->
     </footer>
 </body>
 </html>
