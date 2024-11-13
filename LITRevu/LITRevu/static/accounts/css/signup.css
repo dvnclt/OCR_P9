@@ -1,0 +1,91 @@
+/* Conteneur principal */
+.container {
+    max-width: 400px;
+    width: 100%;
+    padding: 30px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Titre principal */
+h1 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+    text-align: center;
+}
+
+/* Formulaire */
+form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Champs de formulaire */
+form input {
+    padding: 12px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+form input:focus {
+    border-color: #3498db;
+    outline: none;
+}
+
+/* Bouton de soumission */
+form button {
+    padding: 12px;
+    font-size: 1em;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 10%;
+    margin-left: 860px;
+}
+
+form button:hover {
+    background-color: #2980b9;
+}
+
+/* Lien de connexion */
+p {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 1em;
+}
+
+p a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+p a:hover {
+    text-decoration: underline;
+}
+
+/* Message d'erreur (si présent) */
+form .error {
+    color: #e74c3c;
+    font-size: 0.9em;
+    margin-top: 10px;
+    text-align: center;
+}
+
+/* Cacher les messages de validation de mot de passe */
+ul.errorlist, .helptext, .form-control-feedback {
+    display: none !important;
+}

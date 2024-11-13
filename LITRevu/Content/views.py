@@ -7,7 +7,7 @@ from django.http import HttpResponseRedirect
 from django.db.models import Q
 
 from .models import Post, Review
-from .forms import PostReviewForm
+from .forms import PostReviewForm, ReviewForm
 
 from Accounts.models import Subscription
 
@@ -36,7 +36,6 @@ class PostUpdateView(UserPassesTestMixin, UpdateView):
     def test_func(self):
         return self.request.user == self.get_object().author
 
-    # TODO : Vérifier l'utilité
     # S'assure que l'utilisateur ne peut modifier que ses propres posts
     def get_queryset(self):
         return Post.objects.filter(author=self.request.user)
@@ -66,7 +65,7 @@ class PostDeleteView(UserPassesTestMixin, DeleteView):
 class ReviewCreateView(CreateView):
     model = Review
     template_name = 'review_form.html'
-    fields = ['title', 'rating', 'content']
+    form_class = ReviewForm
     success_url = reverse_lazy('feed')
 
     # Assigne l'utilisateur comme auteur de la review
@@ -117,7 +116,7 @@ class ReviewCreateView(CreateView):
 class ReviewUpdateView(UserPassesTestMixin, UpdateView):
     model = Review
     template_name = 'review_form.html'
-    fields = ['title', 'rating', 'content']
+    form_class = ReviewForm
     success_url = reverse_lazy('my_posts')
 
     def test_func(self):
@@ -233,6 +232,7 @@ class FeedView(View):
                 'created_at': review.created_at,
                 'rating': review.rating,
                 'post': review.post,
+                'stars_display': review.stars_display(),
                 'id': review.id
             })
 
@@ -275,6 +275,7 @@ class MyPostsView(View):
                 'created_at': review.created_at,
                 'rating': review.rating,
                 'post': review.post,
+                'stars_display': review.stars_display(),
                 'id': review.id
             })
 

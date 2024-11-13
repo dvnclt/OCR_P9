@@ -1,18 +1,28 @@
 {% extends 'base.html' %}
 {% block title %}Créer un billet{% endblock %}
 
-{% block content %}
-  <h1>Créer un Billet</h1>
-  <form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Envoyer</button>
-    <a href="{% url 'feed' %}">Annuler</a>
-  </form>
+{% load static %}
+{% block extra_styles %}
+    <link rel="stylesheet" href="{% static 'content/css/post.css' %}">
+{% endblock %}
 
-  {% if form.non_field_errors %}
-    <div class="alert alert-danger">
-      {{ form.non_field_errors }}
-    </div>
-  {% endif %}
+{% block content %}
+<div class="post-form-container">
+    <h1>Créer un Billet</h1>
+    
+    <form method="POST" enctype="multipart/form-data" class="post-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Envoyer</button>
+            <a href="{% url 'feed' %}" class="btn btn-secondary">Annuler</a>
+        </div>
+    </form>
+
+    {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+            {{ form.non_field_errors }}
+        </div>
+    {% endif %}
+</div>
 {% endblock %}

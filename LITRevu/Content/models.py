@@ -27,5 +27,10 @@ class Review(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(Member, on_delete=models.CASCADE)
 
+    def stars_display(self):
+        full_star = "★"
+        empty_star = "☆"
+        return full_star * self.rating + empty_star * (5 - self.rating)
+
     def __str__(self):
         return f'Review by {self.author} on {self.post}'

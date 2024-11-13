@@ -1,39 +1,66 @@
 {% extends 'base.html' %}
+
 {% block title %}Mes publications{% endblock %}
 
+{% load static %}
+{% block extra_styles %}
+    <link rel="stylesheet" href="{% static 'content/css/my_posts.css' %}">
+{% endblock %}
+
 {% block content %}
-  <h1>Vos posts</h1>
+<div class="container">
+    <h1>Vos publications</h1>
 
-{% for item in sorted_items %}
-    <div class="item">
-        {% if item.type == 'post' %}
-        <!-- Affichage d'un post -->
-            <p>Vous avez publié un ticket</p>
-            <p>{{ item.created_at|date:"H:i, d F Y" }}</p>
-            <p>{{ item.title }}</p>
-            <p>{{ item.content }}</p>
-            {% if item.image %}
-                <img src="{{ item.image.url }}" alt="{{ item.title }}">
-            {% endif %}
-            <a href="{% url 'post_update' pk=item.id %}" class="btn btn-primary">Modifier</a>
-            <a href="{% url 'post_delete' pk=item.id %}" class="btn btn-danger">Supprimer</a>
+    {% for item in sorted_items %}
+        <div class="item">
+            {% if item.type == 'post' %}
+                <!-- Affichage d'un post -->
+                <div class="post-content">
+                    <div class="post-header">
+                        <p>Vous avez publié un ticket</p>
+                        <p class="post-date">{{ item.created_at|date:"H:i, d F Y" }}</p>
+                    </div>
+                    <p><strong>{{ item.title }}</strong></p>
+                    <p>{{ item.content }}</p>
+                    {% if item.image %}
+                        <img src="{{ item.image.url }}" alt="{{ item.title }}">
+                    {% endif %}
+                    <div class="btn-actions">
+                        <a href="{% url 'post_update' pk=item.id %}" class="btn-primary">Modifier</a>
+                        <a href="{% url 'post_delete' pk=item.id %}" class="btn-danger">Supprimer</a>
+                    </div>
+                </div>
 
-        {% elif item.type == 'review' %}
-            <!-- Affichage d'une critique -->
-            <p>Vous avez publié une critique</p>
-            <p>{{ item.created_at|date:"H:i, d F Y" }}</p>
-            <p>{{ item.title }} - {{ item.rating }} / 5</p>
-            <p>{{ item.content }}</p>
-            <p>Ticket - {{ item.post.author.username }}</p>
-            <p>{{ item.post.title }}</p>
-            {% if item.post.image %}
-                <img src="{{ item.post.image.url }}" alt="{{ item.post.title }}">
+            {% elif item.type == 'review' %}
+                <!-- Affichage d'une critique -->
+                <div class="review-content">
+                    <div class="review-header">
+                        <p>Vous avez publié une critique</p>
+                        <p class="review-date">{{ item.created_at|date:"H:i, d F Y" }}</p>
+                    </div>
+                    <div class="rating">
+                        <p><strong>{{ item.title }}</strong> - </p>
+                        <div class="stars">{{ item.stars_display }}</div>
+                    </div>
+                    <div class="content">{{ item.content }}</div>
+
+                    <!-- Bloc d'informations du post associé -->
+                    <div class="related-post">
+                        <p>Ticket - <strong>{{ item.post.author.username }}</strong></p>
+                        <p><strong>{{ item.post.title }}</strong></p>
+                        {% if item.post.image %}
+                            <img src="{{ item.post.image.url }}" alt="{{ item.post.title }}">
+                        {% endif %}
+                    </div>
+                    <div class="btn-actions">
+                        <a href="{% url 'review_update' pk=item.id %}" class="btn-primary">Modifier</a>
+                        <a href="{% url 'review_delete' pk=item.id %}" class="btn-danger">Supprimer</a>
+                    </div>
+                </div>
             {% endif %}
-            <a href="{% url 'review_update' pk=item.id %}" class="btn btn-primary">Modifier</a>
-            <a href="{% url 'review_delete' pk=item.id %}" class="btn btn-danger">Supprimer</a>
-        {% endif %}
-    </div>
-{% empty %}
-  <p>Aucun post ou critique trouvé.</p>
-{% endfor %}
+        </div>
+    {% empty %}
+        <p class="empty-message">Aucun post ou critique trouvé.</p>
+    {% endfor %}
+</div>
 {% endblock %}

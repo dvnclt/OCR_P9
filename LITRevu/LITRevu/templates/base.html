@@ -5,24 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}LITRevu{% endblock %}</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'litrevu/css/litrevu.css' %}">
+    {% block extra_styles %}{% endblock %}
 </head>
 <body>
     {% block header %}
-    <header>
+    <header class="header-container">
+        <p class="username">Bienvenue {{ user.username }}</p>
         <h1>LITRevu</h1>
-        <p>{{ user.username }}</p>
-        <nav>
+        <nav class="main-nav">
             <ul>
                 <li><a href="{% url 'feed' %}">Flux</a></li>
                 <li><a href="{% url 'my_posts' %}">Mes publications</a></li>
                 <li><a href="{% url 'subscription' %}">Abonnements</a></li>
-                <li>
-                    <form action="{% url 'logout' %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="logout-btn">Se déconnecter</button>
-                    </form>
-                </li>
+                <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn">Se déconnecter</button>
+                </form>
             </ul>
         </nav>
     </header>

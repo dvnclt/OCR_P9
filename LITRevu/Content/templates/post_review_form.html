@@ -1,19 +1,48 @@
 {% extends 'base.html' %}
 {% block title %}Créer une critique{% endblock %}
 
+{% load static %}
+{% block extra_styles %}
+    <link rel="stylesheet" href="{% static 'content/css/post-review.css' %}">
+{% endblock %}
+
 {% block content %}
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <h1>Livre / Article</h1>
+<div class="review-form-container">
+    <form method="post" enctype="multipart/form-data" class="review-form">
+        {% csrf_token %}
+        
+        <h1 class="section-title">Livre / Article</h1>
+        <div class="form-group">
+            <label for="post_title">{{ form.post_title.label }}</label>
+            {{ form.post_title }}
+        </div>
+        <div class="form-group">
+            <label for="post_content">{{ form.post_content.label }}</label>
+            {{ form.post_content }}
+        </div>
+        <div class="form-group">
+            <label for="post_image">{{ form.post_image.label }}</label>
+            {{ form.post_image }}
+        </div>
+        
+        <h1 class="section-title">Critique</h1>
+        <div class="form-group">
+            <label for="review_title">{{ form.review_title.label }}</label>
+            {{ form.review_title }}
+        </div>
+        <div class="form-group">
+            <label for="review_rating">{{ form.review_rating.label }}</label>
+            {{ form.review_rating }}
+        </div>
+        <div class="form-group">
+            <label for="review_content">{{ form.review_content.label }}</label>
+            {{ form.review_content }}
+        </div>
 
-    {{ form.post_title.label }}: {{ form.post_title }}<br>
-    {{ form.post_content.label }}: {{ form.post_content }}<br>
-    {{ form.post_image.label }}: {{ form.post_image }}<br>
-    <h1>Critique</h1>
-    {{ form.review_title.label }}: {{ form.review_title }}<br>
-    {{ form.review_rating.label }}: {{ form.review_rating }}<br>
-    {{ form.review_content.label }}: {{ form.review_content }}<br>
-
-    <button type="submit">Envoyer</button>
-</form>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Envoyer</button>
+            <a href="{% url 'feed' %}" class="btn btn-secondary">Annuler</a>
+        </div>
+    </form>
+</div>
 {% endblock %}

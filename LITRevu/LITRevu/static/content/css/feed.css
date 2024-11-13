@@ -1,0 +1,128 @@
+
+
+/* Style du conteneur principal qui contient le contenu */
+.container {
+    max-width: 1200px; /* Limiter la largeur maximale */
+    width: 100%; /* S'assurer qu'il occupe toute la largeur disponible */
+    padding: 20px; /* Espacement interne */
+    box-sizing: border-box; /* Inclure les bordures et le padding dans la largeur totale */
+    display: flex;
+    flex-direction: column; /* Disposition verticale des éléments à l'intérieur */
+    align-items: center; /* Centrer horizontalement les éléments à l'intérieur du container */
+    margin-left: 350px;
+    padding-top: 0px;
+}
+
+/* Style pour les éléments individuels dans le container */
+.item {
+    background-color: #fff;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 800px;
+}
+
+.post-content {
+    padding: 20px;
+}
+
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.post-header p {
+    margin: 0; /* Supprime la marge autour des <p> */
+}
+
+.post-date {
+    font-size: 0.9em; /* Ajuste la taille de la date si nécessaire */
+    color: gray; /* Change la couleur de la date pour la rendre discrète */
+}
+
+.rating {
+    display: flex;
+    align-items: center; /* Centre les éléments verticalement */
+    gap: 5px; /* Espace entre le titre et les étoiles */
+}
+
+.stars {
+    color: #FFD700; /* Couleur jaune pour les étoiles */
+    font-size: 1.2rem; /* Taille des étoiles, ajustable */
+}
+
+/* Contenu de la critique */
+.review-content {
+    padding: 20px;
+    background-color: #eef2f3;
+    border-radius: 8px;
+}
+
+/* Conteneur pour l'auteur et la date dans les critiques */
+.review-header {
+    display: flex !important;;
+    justify-content: space-between !important;;
+    align-items: center !important;;
+    width: 100% !important;;
+}
+
+/* Style pour la date des critiques */
+.review-header .review-date {
+    color: #666 !important;;
+    margin: 0 !important;;
+}
+
+/* Bloc contenant les informations du post associé */
+.related-post {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-top: 15px;
+}
+
+/* Image dans les éléments */
+.item img,
+.related-post img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+/* Conteneur des boutons */
+.btn-actions {
+    display: flex; /* Utilisation de Flexbox */
+    gap: 20px; /* Espace entre les boutons */
+    margin-bottom: 20px; /* Espacement sous les boutons */
+    padding-top: 50px;
+    padding-left: 730px;
+}
+
+/* Boutons */
+.post_btn,
+.post_review_btn,
+.add_review_btn {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    display: inline-block;
+}
+
+.post_btn:hover,
+.post_review_btn:hover,
+.add_review_btn:hover {
+    background-color: #2980b9;
+}
+
+.add_review_btn {
+    margin-left: 570px;
+    margin-bottom: 0;
+}

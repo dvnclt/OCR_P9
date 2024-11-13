@@ -1,0 +1,167 @@
+/* Conteneur principal */
+.container {
+    max-width: 1200px;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+}
+
+/* Titre principal */
+h1 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+    text-align: center;
+}
+
+/* Formulaire de recherche d'utilisateur */
+.search-results form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.search-results input[type="text"] {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+    width: 300px;
+}
+
+.search-results button[type="submit"] {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+.search-results button[type="submit"]:hover {
+    background-color: #2980b9;
+}
+
+/* Liste des membres */
+.search-results ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    max-width: 800px;
+}
+
+.search-results .member {
+    display: flex;
+    justify-content: space-between;
+    background-color: #fff;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-results .follow-status {
+    font-size: 0.9em;
+    color: gray;
+}
+
+.search-results .follow-form {
+    display: inline;
+}
+
+.search-results .btn-follow {
+    background-color: #3498db;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.9em;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.search-results .btn-follow:hover {
+    background-color: #2980b9;
+}
+
+/* Liste des abonnements */
+.subscrition {
+    margin-top: 30px;
+    width: 100%;
+    max-width: 800px;
+}
+
+.subscrition ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.subscrition li {
+    display: flex;
+    justify-content: space-between;
+    background-color: #fff;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.subscrition .unfollow-btn {
+    background-color: #e74c3c;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.9em;
+    cursor: pointer;
+}
+
+.subscrition .unfollow-btn:hover {
+    background-color: #c0392b;
+}
+
+/* Liste des abonnés */
+.followers {
+    margin-top: 30px;
+    width: 100%;
+    max-width: 800px;
+}
+
+.followers ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.followers li {
+    background-color: #fff;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Message d'absence de résultats */
+.empty-message {
+    text-align: center;
+    font-size: 1em;
+    color: #666;
+}
+
+/* Messages spécifiques */
+.search-results .empty-message,
+.subscrition .empty-message,
+.followers .empty-message {
+    font-style: italic;
+}

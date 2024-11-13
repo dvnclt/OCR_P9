@@ -1,51 +1,75 @@
 {% extends 'base.html' %}
+
 {% block title %}Flux{% endblock %}
 
+{% load static %}
+{% block extra_styles %}
+    <link rel="stylesheet" href="{% static 'content/css/feed.css' %}">
+{% endblock %}
+
 {% block content %}
-<!-- Bouton pour ajouter un post -->
-<a href="{% url 'post_create' %}" class="post_btn">Demander une critique</a>
+<div class="btn-actions">
+    <!-- Bouton pour ajouter un post -->
+    <a href="{% url 'post_create' %}" class="post_btn">Demander une critique</a>
+    <!-- Bouton pour créer une critique -->
+    <a href="{% url 'post-review_create' %}" class="post_review_btn">Créer une critique</a>
+</div>
+<div class="container">
+    <h1>Activité récente</h1>
 
-<!-- Bouton pour créer une critique -->
-<a href="{% url 'post-review_create' %}" class="post_review_btn">Créer une critique</a>
+    {% for item in sorted_items %}
+        <div class="item">
+            {% if item.type == 'post' %}
+                <!-- Affichage d'un post -->
+                <div class="post-content">
+                    <div class="post-header">
+                        {% if item.author == user %}
+                            <p>Vous avez demandé une critique</p>
+                        {% else %}
+                            <p>{{ item.author.username }} a demandé une critique</p>
+                        {% endif %}
+                        <p class="post-date">{{ item.created_at|date:"H:i, d F Y" }}</p>
+                    </div>
+                    <p><strong>{{ item.title }}</strong></p>
+                    <p>{{ item.content }}</p>
+                    {% if not item.has_reviewed %}
+                        <a href="{% url 'review_create' %}?post_id={{ item.id }}" class="add_review_btn">Ajouter une critique</a>
+                    {% endif %}
+                    {% if item.image %}
+                        <img src="{{ item.image.url }}" alt="{{ item.title }}">
+                    {% endif %}
+                </div>
 
-<h2>Activité récente</h2>
-{% for item in sorted_items %}
-    <div class="item">
-        {% if item.type == 'post' %}
-            <!-- Affichage d'un post -->
-            {% if item.author == user %}
-                <p>Vous avez demandé une critique</p>
-            {% else %}
-                <p>{{ item.author.username }} a demandé une critique</p>
+            {% elif item.type == 'review' %}
+                <!-- Affichage d'une critique -->
+                <div class="review-content">
+                    <div class="review-header">
+                        {% if item.author == user %}
+                            <p>Vous avez publié une critique</p>
+                        {% else %}
+                            <p><strong>{{ item.author.username }}</strong> a publié une critique</p>
+                        {% endif %}
+                        <p class="review-date">{{ item.created_at|date:"H:i, d F Y" }}</p>
+                    </div>
+                    <div class="rating">
+                        <p><strong>{{ item.title }}</strong> - </p>
+                        <div class="stars">{{ item.stars_display }}</div>
+                    </div>
+                    <p>{{ item.content|truncatewords:30 }}</p>
+                    
+                    <!-- Bloc d'informations du post associé -->
+                    <div class="related-post">
+                        <p>Ticket de : <strong>{{ item.post.author.username }}</strong></p>
+                        <p><strong>{{ item.post.title }}</strong></p>
+                        {% if item.post.image %}
+                            <img src="{{ item.post.image.url }}" alt="{{ item.post.title }}">
+                        {% endif %}
+                    </div>
+                </div>
             {% endif %}
-            <h3>{{ item.title }}</h3>
-            <p>Contenu: {{ item.content }}</p>
-            {% if not item.has_reviewed %}
-                <a href="{% url 'review_create' %}?post_id={{ item.id }}" class="add_review_btn">Ajouter une critique</a>
-            {% endif %}
-            {% if item.image %}
-                <img src="{{ item.image.url }}" alt="{{ item.title }}">
-            {% endif %}
-            <p>{{ item.created_at|date:"H:i, d F Y" }}</p>
-
-        {% elif item.type == 'review' %}
-            <!-- Affichage d'une critique -->
-            {% if item.author == user %}
-                <p>Vous avez publié une critique</p>
-            {% else %}
-                <p>{{ item.author.username }} a publié une critique</p>
-            {% endif %}
-            <p>{{ item.created_at|date:"H:i, d F Y" }}</p>
-            <p>{{ item.title }} - {{ item.rating }} / 5</p>
-            <p>{{ item.content|truncatewords:30 }}</p>
-            <p>Ticket - {{ item.post.author.username }}</p>
-            <p>{{ item.post.title }}</p>
-            {% if item.post.image %}
-                <img src="{{ item.post.image.url }}" alt="{{ item.post.title }}">
-            {% endif %}
-        {% endif %}
-    </div>
-{% empty %}
-    <p>Aucun post ou critique trouvé.</p>
-{% endfor %}
+        </div>
+    {% empty %}
+        <p>Aucun post ou critique trouvé.</p>
+    {% endfor %}
+</div>
 {% endblock %}

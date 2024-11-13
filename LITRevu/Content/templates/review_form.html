@@ -1,22 +1,32 @@
 {% extends 'base.html' %}
-{% block title %}Modifier la critique{% endblock %}
+{% block title %}Ajouter une critique{% endblock %}
+
+{% load static %}
+{% block extra_styles %}
+    <link rel="stylesheet" href="{% static 'content/css/review.css' %}">
+{% endblock %}
 
 {% block content %}
-<h1>Modifier la critique</h1>
+<div class="review-form-container">
+    <h1>Ajouter une critique</h1>
 
-<h2>Critique du post :</h2>
-<p>{{ post.author.username }} a demandé une critique:</p>
-<p>{{ post.title }}</p>
-<p>{{ post.content }}</p>
-{% if post.image %}
-    <img src="{{ post.image.url }}" alt="{{ post.title }}" class="img-fluid">
-{% endif %}
+    <h2>Critique du post :</h2>
+    <div class="post-preview">
+        <p class="post-author">{{ post.author.username }} a demandé une critique :</p>
+        <p class="post-title">{{ post.title }}</p>
+        <p class="post-content">{{ post.content }}</p>
+        {% if post.image %}
+            <img src="{{ post.image.url }}" alt="{{ post.title }}" class="post-image img-fluid">
+        {% endif %}
+    </div>
 
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Envoyer</button>
-    <a href="{% url 'my_posts' %}" class="btn btn-secondary">Annuler</a>
-</form>
-
+    <form method="post" enctype="multipart/form-data" class="review-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Envoyer</button>
+            <a href="{% url 'my_posts' %}" class="btn btn-secondary">Annuler</a>
+        </div>
+    </form>
+</div>
 {% endblock %}

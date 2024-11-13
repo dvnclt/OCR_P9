@@ -1,5 +1,7 @@
 from django import forms
 
+from .models import Review
+
 
 class PostReviewForm(forms.Form):
     post_title = forms.CharField(
@@ -29,3 +31,14 @@ class PostReviewForm(forms.Form):
         widget=forms.Textarea(),
         label="Commentaire"
     )
+
+
+class ReviewForm(forms.ModelForm):
+    RATING_CHOICES = [(i, str(i)) for i in range(1, 6)]  # Options de 1 à 5
+
+    rating = forms.ChoiceField(choices=RATING_CHOICES, widget=forms.Select,
+                               label="Note")
+
+    class Meta:
+        model = Review
+        fields = ['title', 'rating', 'content']
