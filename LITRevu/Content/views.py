@@ -154,10 +154,10 @@ class PostReviewCreateView(View):
         return render(request, 'post_review_form.html', {'form': form})
 
     def post(self, request, *args, **kwargs):
-        form = PostReviewForm(request.POST)
+        form = PostReviewForm(request.POST, request.FILES)
 
         if form.is_valid():
-            # Créer et sauvegarder le post
+            # Créé et sauvegarde le post
             post = Post(
                 title=form.cleaned_data['post_title'],
                 content=form.cleaned_data['post_content'],
@@ -165,7 +165,12 @@ class PostReviewCreateView(View):
             )
             post.save()
 
-            # Créer et sauvegarder la critique
+            # Si une image a été téléchargée, l'associe au post
+            if 'post_image' in form.cleaned_data:
+                post.image = form.cleaned_data['post_image']
+                post.save()
+
+            # Créé et sauvegarde la critique
             review = Review(
                 post=post,
                 title=form.cleaned_data['review_title'],
@@ -177,6 +182,7 @@ class PostReviewCreateView(View):
 
             return redirect('feed')
 
+        # Si le formulaire n'est pas valide, renvoye les erreurs
         return render(request, 'post_review_form.html', {'form': form})
 
 

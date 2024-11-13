@@ -32,11 +32,11 @@
                     </div>
                     <p><strong>{{ item.title }}</strong></p>
                     <p>{{ item.content }}</p>
-                    {% if not item.has_reviewed %}
-                        <a href="{% url 'review_create' %}?post_id={{ item.id }}" class="add_review_btn">Ajouter une critique</a>
-                    {% endif %}
                     {% if item.image %}
                         <img src="{{ item.image.url }}" alt="{{ item.title }}">
+                    {% endif %}
+                    {% if not item.has_reviewed %}
+                    <a href="{% url 'review_create' %}?post_id={{ item.id }}" class="add_review_btn">Ajouter une critique</a>
                     {% endif %}
                 </div>
 
